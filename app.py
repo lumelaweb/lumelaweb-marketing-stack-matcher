@@ -18,7 +18,7 @@ if "messages" not in st.session_state:
         },
         {
             "role": "assistant",
-            "content": "Hey there! 👋 I’m Marketing Tool Match GPT, created by LumelaWeb. My job is to help small business owners, solopreneurs, and consultants like you find the right marketing tools that actually fit your business — no fluff, no overwhelm.\n\nWhether you're building your first system or trying to clean up a tech mess, I help you match your goals and growth plans with tools for things like:\n\n- CRM (Customer Relationship Management)\n- Email marketing\n- Booking/calendar tools\n- Landing pages\n- Analytics\n…and more.\n\nI’m built on the same strategic approach LumelaWeb uses in their 90-Day Website Growth Blueprint. If you'd rather talk to a human, you can always book a free 30-minute call here.\n\nWant me to help match you with the right tools? I’ll just need to ask a few quick questions. Ready to get started?"
+            "content": "Hey there! 👋 I’m Marketing Tool Match GPT, created by LumelaWeb. My job is to help small business owners, solopreneurs, and consultants like you find the right marketing tools that actually fit your business — no fluff, no overwhelm.\n\nWhether you're building your first system or trying to clean up a tech mess, I help you match your goals and growth plans with tools for things like:\n\n- CRM (Customer Relationship Management)\n- Email marketing\n- Booking/calendar tools\n-...
         }
     ]
 
@@ -30,7 +30,7 @@ for msg in st.session_state.messages:
         st.markdown(f"**You:** {msg['content']}")
 
 # User input
-user_input = st.text_input("Your response:", key="user_input")
+user_input = st.text_input("Your response:", value="", key="user_input")
 
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
@@ -43,4 +43,7 @@ if user_input:
 
     assistant_reply = response.choices[0].message.content
     st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
-    st.rerun()
+
+    # Clear the input after submission
+    st.session_state.user_input = ""
+    st.experimental_rerun()
