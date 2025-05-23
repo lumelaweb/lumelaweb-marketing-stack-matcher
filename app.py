@@ -9,7 +9,7 @@ client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 # Page configuration
 st.set_page_config(page_title="Marketing Tool Match GPT", page_icon="🧩")
 
-# Starter message
+# Starter messages
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
@@ -37,9 +37,9 @@ if "messages" not in st.session_state:
         }
     ]
 
-# Input control toggle
-if "input_toggle" not in st.session_state:
-    st.session_state.input_toggle = 0
+# Input management
+if "user_input" not in st.session_state:
+    st.session_state.user_input = ""
 
 # Display chat messages
 for msg in st.session_state.messages:
@@ -48,13 +48,15 @@ for msg in st.session_state.messages:
     else:
         st.markdown(f"**You:** {msg['content']}")
 
-# Use key tied to toggle so Streamlit re-renders with a fresh input box
-user_input = st.text_input("Your response:", key=f"user_input_{st.session_state.input_toggle}")
+# Text input box
+user_input = st.text_input("Your response:", value=st.session_state.user_input)
 
-if user_input:
+# On submit
+if user_input and user_input != st.session_state.user_input:
+    st.session_state.user_input = user_input
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # GPT response using OpenAI Python v1 SDK
+    # Get GPT response
     response = client.chat.completions.create(
         model="gpt-4",
         messages=st.session_state.messages
@@ -63,6 +65,6 @@ if user_input:
     assistant_reply = response.choices[0].message.content
     st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
 
-    # Trigger input reset by changing key
-    st.session_state.input_toggle += 1
+    # Reset input
+    st.session_state.user_input = ""
     st.experimental_rerun()
