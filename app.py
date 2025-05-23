@@ -18,7 +18,7 @@ if "messages" not in st.session_state:
         },
         {
             "role": "assistant",
-            "content": "Hey there! 👋 I’m Marketing Tool Match GPT, created by LumelaWeb. My job is to help small business owners, solopreneurs, and consultants like you find the right marketing tools that actually fit your business — no fluff, no overwhelm.\n\nWhether you're building your first system or trying to clean up a tech mess, I help you match your goals and growth plans with tools for things like:\n\n- CRM (Customer Relationship Management)\n- Email marketing\n- Booking/calendar tools\n-...
+            "content": "Hey there! 👋 I’m Marketing Tool Match GPT, created by LumelaWeb. My job is to help small business owners, solopreneurs, and consultants like you find the right marketing tools that actually fit your business — no fluff, no overwhelm.\n\nWhether you're building your first system or trying to clean up a tech mess, I help you match your goals and growth plans with tools for things like:\n\n- CRM (Customer Relationship Management)\n- Email marketing\n- Booking/calendar tools\n- Landing pages\n- Analytics\n…and more.\n\nI’m built on the same strategic approach LumelaWeb uses in their 90-Day Website Growth Blueprint. If you'd rather talk to a human, you can always book a free 30-minute call here.\n\nWant me to help match you with the right tools? I’ll just need to ask a few quick questions. Ready to get started?"
         }
     ]
 
