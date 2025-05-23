@@ -37,6 +37,10 @@ if "messages" not in st.session_state:
         }
     ]
 
+# Input control toggle
+if "input_toggle" not in st.session_state:
+    st.session_state.input_toggle = 0
+
 # Display chat messages
 for msg in st.session_state.messages:
     if msg["role"] == "assistant":
@@ -44,8 +48,8 @@ for msg in st.session_state.messages:
     else:
         st.markdown(f"**You:** {msg['content']}")
 
-# User input
-user_input = st.text_input("Your response:", value="", key="user_input")
+# Use key tied to toggle so Streamlit re-renders with a fresh input box
+user_input = st.text_input("Your response:", key=f"user_input_{st.session_state.input_toggle}")
 
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
@@ -59,6 +63,6 @@ if user_input:
     assistant_reply = response.choices[0].message.content
     st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
 
-    # Clear the input after submission
-    st.session_state.user_input = ""
+    # Trigger input reset by changing key
+    st.session_state.input_toggle += 1
     st.experimental_rerun()
