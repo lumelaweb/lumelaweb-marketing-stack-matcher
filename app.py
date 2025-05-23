@@ -1,4 +1,3 @@
-
 import streamlit as st
 import openai
 import os
@@ -9,7 +8,7 @@ client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 # Page configuration
 st.set_page_config(page_title="Marketing Tool Match GPT", page_icon="🧩")
 
-# Starter messages
+# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
@@ -37,26 +36,18 @@ if "messages" not in st.session_state:
         }
     ]
 
-# Input management
-if "user_input" not in st.session_state:
-    st.session_state.user_input = ""
-
-# Display chat messages
+# Display chat history
 for msg in st.session_state.messages:
-    if msg["role"] == "assistant":
-        st.markdown(f"**GPT:** {msg['content']}")
-    else:
-        st.markdown(f"**You:** {msg['content']}")
+    st.markdown(f"**{msg['role'].capitalize()}**: {msg['content']}")
 
-# Text input box
-user_input = st.text_input("Your response:", value=st.session_state.user_input)
+# Use a form to handle submission and clear input safely
+with st.form(key="chat_form", clear_on_submit=True):
+    user_input = st.text_input("Your response:")
+    submitted = st.form_submit_button("Send")
 
-# On submit
-if user_input and user_input != st.session_state.user_input:
-    st.session_state.user_input = user_input
+if submitted and user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # Get GPT response
     response = client.chat.completions.create(
         model="gpt-4",
         messages=st.session_state.messages
@@ -65,6 +56,4 @@ if user_input and user_input != st.session_state.user_input:
     assistant_reply = response.choices[0].message.content
     st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
 
-    # Reset input
-    st.session_state.user_input = ""
     st.experimental_rerun()
