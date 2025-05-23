@@ -1,36 +1,56 @@
 import streamlit as st
-from openai import OpenAI
-import os
-from dotenv import load_dotenv
+import openai
 
-# Load environment variables
-load_dotenv()
+# Set your OpenAI API key securely
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+st.set_page_config(page_title="Marketing Stack Matcher", page_icon="📎")
 
-st.set_page_config(page_title="Match GPT – Marketing Stack Matchmaker", page_icon="🧩")
-st.title("🧩 Match GPT – Marketing Stack Matchmaker")
+# Initial welcome message from the assistant
+WELCOME_MESSAGE = (
+    "Hey there! 👋 I’m Marketing Tool Match GPT, created by LumelaWeb. My job is to help small business owners, "
+    "solopreneurs, and consultants like you find the right marketing tools that actually fit your business — no fluff, no overwhelm.\n\n"
+    "Whether you're building your first system or trying to clean up a tech mess, I help you match your goals and growth plans with tools for things like:\n"
+    "- CRM (Customer Relationship Management)\n"
+    "- Email marketing\n"
+    "- Booking/calendar tools\n"
+    "- Landing pages\n"
+    "- Analytics\n"
+    "…and more.\n\n"
+    "I’m built on the same strategic approach LumelaWeb uses in their 90-Day Website Growth Blueprint. If you'd rather talk to a human, you can always book a free 30-minute call here: https://calendly.com/lumelaweb/30min\n\n"
+    "Want me to help match you with the right tools? I’ll just need to ask a few quick questions. Ready to get started?"
+)
 
+# Initialize session state
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [
-        {"role": "system", "content": """You are Match GPT, created by LumelaWeb to help entrepreneurs match the right marketing tools to their goals and tech comfort. 
-You ask one clear question at a time. After 3–4 questions, ask if the user would like their customized stack.
-Offer a free 30-min consultation: https://calendly.com/lumelaweb/30min. 
-If they ask for a person, direct them to lumelaweb.com or ssimpson@lumelaweb.com."""}
+    st.session_state.messages = [
+        {"role": "system", "content": "You are a helpful assistant that asks one question at a time and checks in after a few questions."},
+        {"role": "assistant", "content": WELCOME_MESSAGE},
     ]
 
+# Display title and get user input
+st.title("📎 Marketing Tool Match GPT")
+user_input = st.chat_input("Type your answer here...")
+
+# Display message history
 for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-user_input = st.chat_input("Tell me what you're trying to solve...")
+# Process new user input
 if user_input:
-    st.chat_message("user").write(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-    response = client.chat.completions.create(
+    # Get GPT response
+    response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=st.session_state.messages
     )
-    assistant_reply = response.choices[0].message.content
-    st.chat_message("assistant").write(assistant_reply)
-    st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
+
+    reply = response.choices[0].message["content"]
+    st.session_state.messages.append({"role": "assistant", "content": reply})
+
+    with st.chat_message("assistant"):
+        st.markdown(reply)
