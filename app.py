@@ -1,3 +1,4 @@
+
 import streamlit as st
 import openai
 import os
@@ -40,8 +41,8 @@ if "messages" not in st.session_state:
 for msg in st.session_state.messages:
     st.markdown(f"**{msg['role'].capitalize()}**: {msg['content']}")
 
-# Use a form to handle submission and clear input safely
-with st.form(key="chat_form", clear_on_submit=True):
+# Text input and form submission
+with st.form("chat_form", clear_on_submit=True):
     user_input = st.text_input("Your response:")
     submitted = st.form_submit_button("Send")
 
@@ -55,5 +56,4 @@ if submitted and user_input:
 
     assistant_reply = response.choices[0].message.content
     st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
-
-    st.experimental_rerun()
+    # Do NOT rerun the script manually — Streamlit handles it after form submission
