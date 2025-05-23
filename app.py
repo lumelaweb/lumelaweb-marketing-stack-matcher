@@ -43,4 +43,4 @@ if user_input:
 
     assistant_reply = response.choices[0].message.content
     st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
-    st.experimental_rerun()
+    st.rerun()
